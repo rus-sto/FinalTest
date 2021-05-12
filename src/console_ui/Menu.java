@@ -6,12 +6,10 @@ import bean.UserBuilder;
 import bean.UserBuilderImpl;
 import io.UserFileWriter;
 import service.DataBaseService;
-import util.CommandReader;
 
 import java.util.List;
 import java.util.Scanner;
 
-import static bean.Role.ADMIN;
 import static bean.Role.USER;
 import static console_ui.Validator.*;
 
@@ -23,7 +21,7 @@ public class Menu {
     private final String createNameMessage = "Input NAME and press 'Enter'";
     private final String createSurNameMessage = "Input SURNAME and press 'Enter'";
     private final String createEmailMessage = "Input EMAIL and press 'Enter'";
-    private final String createRoleMessage = "Input ROLE  :\n" +
+    private final String createRoleMessage = "Input ROLE NUMBER :\n" +
             "1. USER\n" +
             "2. CUSTOMER\n" +
             "3. PROVIDER\n" +
@@ -40,7 +38,8 @@ public class Menu {
                     "2. Edit user\n" +
                     "3. View all users\n" +
                     "4. Save changes\n" +
-                    "5. Exit";
+                    "5. Remove User By ID\n" +
+                    "6. Exit";
     private final String createUserMessage =
             "1. Input User name\n" +
                     "2. Input User surName\n" +
@@ -67,8 +66,12 @@ public class Menu {
                     "3. Input Mobil3 Number\n" +
                     "4. Exit";
     private final String enterIdMessage = "Input the ID you want user to be edited, and press 'enter'";
+    private final String removeIdMessage = "Input the ID you want user to be removed, and press 'enter'";
     private final String firstEditMessage = "Input 1 to Input ID \n" +
             "Input 2 to leave menu";
+    private final String validationRemoveMessage = "You are Removing User  Id you choose. \n " +
+            "Input - '1' - to remove\n" +
+            "Input - '2' - to leave this menu";
     private final Scanner scanner;
 
     public Menu() {
@@ -79,21 +82,24 @@ public class Menu {
     public void mainMenu() {
         int choice;
         while (true) {
-            choice = getAnswerFromMenu(startMessage, 5);
+            choice = getAnswerFromMenu(startMessage, 6);
             switch (choice) {
                 case 1:
                     createUserMenu();
                     break;
                 case 2:
-                    firstEditMenu();
+                    editMenu();
                     break;
                 case 3:
-                    //                   viewUsers();
+                    viewUsers();
                     break;
                 case 4:
                     saveChanges();
                     break;
                 case 5:
+                    removeUser();
+                    break;
+                case 6:
                     return;
             }
         }
@@ -135,6 +141,14 @@ public class Menu {
 
     private void printStartMessage() {
         System.out.println(startMessage);
+    }
+
+    public void viewUsers() {
+        List<User> userList = dataBaseService.getUsersDataBase();
+        for (int i = 0; i < userList.size(); i++) {
+            System.out.println(userList.get(i));
+        }
+
     }
 
     public void createUserMenu() {
@@ -187,7 +201,27 @@ public class Menu {
         }
     }
 
-    private void firstEditMenu() {
+    private void inputIdMenuForRemove(String removeIdMessage) {
+        String id = "";
+        while (true) {
+            System.out.println(removeIdMessage);
+            if (scanner.hasNextLine()) {
+                id = scanner.nextLine();
+            }
+            if (id.length() > 0 && isNumber(id)
+                    && dataBaseService.hasDataBaseUserById(Integer.parseInt(id))) {
+                System.out.println(dataBaseService.getUserFromDataBase(Integer.parseInt(id)));
+                removeUserById(Integer.parseInt(id));
+                return;
+            } else {
+                errorMenu("You do not Input correct ID Number, " +
+                        "\npress 'Enter' to try again");
+
+            }
+        }
+    }
+
+    private void editMenu() {
         int choice;
         while (true) {
             choice = getAnswerFromMenu(firstEditMessage, 2);
@@ -201,9 +235,43 @@ public class Menu {
         }
     }
 
+    private void removeUser() {
+        int choice;
+        while (true) {
+            choice = getAnswerFromMenu(firstEditMessage, 2);
+            switch (choice) {
+                case 1:
+                    inputIdMenuForRemove(removeIdMessage);
+                    break;
+                case 2:
+                    return;
+            }
+        }
+
+    }
+
+    private void removeUserById(int id) {
+//        System.out.println(dataBaseService.getUserFromDataBase(id));
+        int choice;
+        while (true) {
+            choice = getAnswerFromMenu(validationRemoveMessage, 2);
+
+            switch (choice) {
+                case 1:
+                    dataBaseService.removeUserFromDataBase(id);
+                    System.out.println("User Id = " + id + " successfully removed");
+                    break;
+                case 2:
+                    return;
+            }
+        }
+
+
+    }
+
     private void editUserMenu(int id) {
         int choice;
-        userBuilder = new UserBuilderImpl();
+        //       userBuilder = new UserBuilderImpl();
         while (true) {
             choice = getAnswerFromMenu(editUserMessage, 6);
             switch (choice) {
@@ -243,6 +311,7 @@ public class Menu {
             }
         }
     }
+
     private void editSurNameMenu(int id) {
         String answer = "";
         while (true) {
@@ -259,6 +328,7 @@ public class Menu {
         }
 
     }
+
     private void editEmailMenu(int id) {
         String answer = "";
         while (true) {
@@ -274,34 +344,77 @@ public class Menu {
             }
         }
     }
+
     private void editRoleMenu(int id) {
-        String answer = "";
+        int choice;
         while (true) {
-            System.out.println(createNameMessage);
-            if (scanner.hasNextLine()) {
-                answer = CommandReader.readString("Input needed Role number");
+            choice = getAnswerFromMenu(createRoleMessage, 10);
+            switch (choice) {
+                case 1:
+                    dataBaseService.getUserFromDataBase(id).setRole1(USER);
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.EMPTY_ROLE);
+                    break;
+                case 2:
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.CUSTOMER);
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.EMPTY_ROLE);
+
+                    break;
+                case 3:
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.PROVIDER);
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.EMPTY_ROLE);
+
+                    break;
+                case 4:
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.ADMIN);
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.EMPTY_ROLE);
+
+                    break;
+                case 5:
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.ADMIN);
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.USER);
+                    break;
+                case 6:
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.PROVIDER);
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.USER);
+                    break;
+                case 7:
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.PROVIDER);
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.CUSTOMER);
+                    break;
+                case 8:
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.ADMIN);
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.CUSTOMER);
+                    break;
+                case 9:
+                    dataBaseService.getUserFromDataBase(id).setRole1(Role.SUPER_ADMIN);
+                    dataBaseService.getUserFromDataBase(id).setRole2(Role.EMPTY_ROLE);
+
+                    break;
+                case 10:
+                    System.out.println("You are exit to prev menu");
+                    return;
             }
-            if (answer.length() > 0 && isRole(answer)) {
-//                dataBaseService.getUserFromDataBase(id).setRole1(answer);
-                return;
-            } else {
-                errorMenu("You do not Input the Role, press 'Enter' to try again");
-            }
+            System.out.println("The role # " + choice + " is chosen");
+            return;
         }
     }
+
     private void editMobilMenu(int id) {
-        String answer = "";
+        int choice;
         while (true) {
-//            System.out.println(editPhoneMessage);
-            if (scanner.hasNextLine()) {
-                answer = CommandReader.readString("Enter mobil 1: ");
-//                answer = scanner.nextLine();
-            }
-            if (answer.length() > 0 && isPhone(answer)) {
-                dataBaseService.getUserFromDataBase(id).setMobil1(answer);
-                return;
-            } else {
-                errorMenu("You do not Input the Mobil Number correct, press 'Enter' to try again");
+            choice = getAnswerFromMenu(createMobilMessage, 4);
+            switch (choice) {
+                case 1:
+                    dataBaseService.getUserFromDataBase(id).setMobil1(getMobileData());
+                    break;
+                case 2:
+                    dataBaseService.getUserFromDataBase(id).setMobil2(getMobileData());
+                    break;
+                case 3:
+                    dataBaseService.getUserFromDataBase(id).setMobil3(getMobileData());
+                    break;
+                case 4:
+                    return;
             }
         }
     }
@@ -347,7 +460,7 @@ public class Menu {
                 answer = scanner.nextLine();
             }
             if (answer.length() > 0 && isEmail(answer)) {
-                userBuilder.setSirName(answer);
+                userBuilder.setEmail(answer);
                 return;
             } else {
                 errorMenu("You do not Input the Email, press 'Enter' to continue try again");

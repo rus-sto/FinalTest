@@ -1,5 +1,7 @@
-1;fdgtdh;null;null;USER;ADMIN;null;null;null
 2;Pavel;dhdjhdjh@fhf.hh;null;USER;ADMIN;null;null;null
 3;Kolya;k_iv@tut.by;null;USER;EMPTY_ROLE;+375291112233;null;null
-4;Dan;dan-mydan@mail.ru;null;USER;EMPTY_ROLE;+375293334455;null;null
+4;Danny;dan-mydan@mail.ru;null;ADMIN;EMPTY_ROLE;+375293334455;null;+375447776655
 5;Dan1;mydan1@mail.ru;null;CUSTOMER;EMPTY_ROLE;+375336657788;null;null
+6;Rusel;rus-sto@tut.by;null;USER;PROVIDER;+375297571018;+375296881397;null
+7;Tanya;tan_mih@mail.ru;null;SUPER_ADMIN;EMPTY_ROLE;null;null;+375293910650
+8;tr;sm;rt@tr.by;USER;PROVIDER;null;null;null

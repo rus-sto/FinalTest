@@ -21,6 +21,7 @@ public class DataBaseService {
     }
 
     public List<User> getUsersDataBase() {
+
         return usersDataBase;
     }
 
@@ -32,6 +33,14 @@ public class DataBaseService {
         }
         return new User();
     }
+    public void removeUserFromDataBase(int id) {
+        for (User us : usersDataBase) {
+            if (us.getId() == id) {
+                usersDataBase.remove(us);
+                break;
+            }
+        }
+            }
 
     public void addToDataBase(User user) {
         lastId = lastId + 1;
