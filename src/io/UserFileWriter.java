@@ -10,7 +10,6 @@ public class UserFileWriter {
     public static final String DELIMITER = ";";
 
     public static String userToString(User user) {
-
         return user.getId() + DELIMITER
                 + user.getName() + DELIMITER
                 + user.getSirName() + DELIMITER
@@ -23,7 +22,6 @@ public class UserFileWriter {
     }
 
     public static void writeToFile(List<User> usersList) {
-
         try (FileWriter writer = new FileWriter("src\\resources\\testFile")) {
             for (User ul : usersList) {
                 writer.write(UserFileWriter.userToString(ul));

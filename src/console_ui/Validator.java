@@ -20,11 +20,13 @@ public class Validator {
         return matcher.matches();
 
     }
+
     public static boolean isRole(String answer) {
         matcher = ROLE_PATTERN.matcher(answer);
         return matcher.matches();
 
     }
+
     public static boolean isLetter(String answer) {
         matcher = LETTER_PATTERN.matcher(answer);
         return matcher.matches();
@@ -35,12 +37,13 @@ public class Validator {
         matcher = PHONE_PATTERN.matcher(answer);
         return matcher.matches();
     }
+
     public static boolean isEmail(String answer) {
         matcher = EMAIL_PATTERN.matcher(answer);
         return matcher.matches();
     }
 
-        public static boolean isNotEmptyString(String answer) {
+    public static boolean isNotEmptyString(String answer) {
         return !answer.isEmpty();
     }
 

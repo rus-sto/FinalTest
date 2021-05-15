@@ -1,8 +1,6 @@
 package service;
 
-import bean.Role;
 import bean.User;
-import bean.UserBuilderImpl;
 import io.UserFileReader;
 
 import java.util.List;
@@ -21,7 +19,6 @@ public class DataBaseService {
     }
 
     public List<User> getUsersDataBase() {
-
         return usersDataBase;
     }
 
@@ -33,6 +30,7 @@ public class DataBaseService {
         }
         return new User();
     }
+
     public void removeUserFromDataBase(int id) {
         for (User us : usersDataBase) {
             if (us.getId() == id) {
@@ -40,7 +38,7 @@ public class DataBaseService {
                 break;
             }
         }
-            }
+    }
 
     public void addToDataBase(User user) {
         lastId = lastId + 1;
@@ -49,7 +47,6 @@ public class DataBaseService {
     }
 
     public List<User> addToDataBase(List<User> userList) {
-
         usersDataBase.addAll(userList);
         return usersDataBase;
     }

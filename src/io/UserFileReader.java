@@ -12,9 +12,7 @@ public class UserFileReader {
     public static final String FILE_PATH = "src\\resources\\testFile";
 
     public static List<User> readFromFile() {
-
         List<User> userBase = new ArrayList<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String txtString;
             while ((txtString = reader.readLine()) != null) {
@@ -53,6 +51,5 @@ public class UserFileReader {
                 .build();
         return user;
     }
-
 }
 
